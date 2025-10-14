@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block title %}{{ dashboard.name }}{% endblock %}
+
+{% block head %}
+<script>
+function loadPanelData(panelId, container) {
+    fetch(`/panel/${panelId}/data/`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                container.innerHTML = `<div style="color:red;">Erro: ${data.error}</div>`;
+                return;
+            }
+            
+            // Renderizar tabela simples
+            let html = '<table style="width:100%;border-collapse:collapse;font-size:0.9em;">';
+            html += '<thead><tr>';
+            data.columns.forEach(col => {
+                html += `<th style="text-align:left;padding:8px;border-bottom:1px solid var(--brand-border);">${col}</th>`;
+            });
+            html += '</tr></thead><tbody>';
+            
+            data.rows.forEach(row => {
+                html += '<tr>';
+                row.forEach(cell => {
+                    html += `<td style="padding:8px;border-bottom:1px solid var(--brand-border);">${cell}</td>`;
+                });
+                html += '</tr>';
+            });
+            
+            html += '</tbody></table>';
+            container.innerHTML = html;
+        })
+        .catch(error => {
+            container.innerHTML = `<div style="color:red;">Erro ao carregar dados: ${error}</div>`;
+        });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Carregar dados para cada painel
+    document.querySelectorAll('.panel-container').forEach(container => {
+        const panelId = container.dataset.panelId;
+        loadPanelData(panelId, container);
+    });
+});
+</script>
+{% endblock %}
+
+{% block content %}
+<div style="margin-bottom:2rem;">
+    <h1 style="margin:0 0 0.5rem 0;">{{ dashboard.name }}</h1>
+    {% if dashboard.description %}
+    <p style="color:var(--brand-muted);margin:0;">{{ dashboard.description }}</p>
+    {% endif %}
+</div>
+
+<div style="display:grid;gap:1.5rem;">
+    {% for panel in panels %}
+    <div class="card" style="grid-column: span {{ panel.width }};">
+        <h3 style="margin:0 0 1rem 0;">{{ panel.title }}</h3>
+        <div class="panel-container" data-panel-id="{{ panel.id }}">
+            <div style="text-align:center;padding:2rem;color:var(--brand-muted);">
+                Carregando dados...
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="card">
+        <p>Nenhum painel configurado para este dashboard.</p>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

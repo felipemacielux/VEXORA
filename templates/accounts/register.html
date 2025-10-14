@@ -1,0 +1,254 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Cadastro - Vexora{% endblock %}
+
+{% block head %}
+<style>
+.auth-container {
+    max-width: 440px;
+    margin: 2rem auto;
+    padding: 2rem;
+}
+
+.auth-hero {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.auth-logo {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-primary-strong) 100%);
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+    box-shadow: 0 8px 24px rgba(99, 86, 229, 0.4);
+}
+
+.auth-logo img {
+    width: 48px;
+    height: 48px;
+    filter: brightness(0) invert(1);
+}
+
+.auth-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+    color: var(--brand-text);
+    text-align: center;
+}
+
+.auth-subtitle {
+    color: var(--brand-muted);
+    text-align: center;
+    margin-bottom: 2rem;
+    font-size: 1.1rem;
+}
+
+.auth-card {
+    background: var(--brand-surface);
+    padding: 2.5rem;
+    border-radius: 20px;
+    border: 1px solid var(--brand-border);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-input {
+    width: 100%;
+    padding: 14px 16px;
+    border: 2px solid var(--brand-border);
+    border-radius: 12px;
+    background: var(--brand-bg);
+    color: var(--brand-text);
+    font-size: 1rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: var(--brand-primary);
+    box-shadow: 0 0 0 4px rgba(99, 86, 229, 0.1);
+    transform: translateY(-2px);
+}
+
+.form-input:hover {
+    border-color: var(--brand-primary-soft);
+}
+
+.btn-auth {
+    width: 100%;
+    padding: 14px;
+    background: var(--brand-primary);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-auth:hover {
+    background: var(--brand-primary-strong);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(99, 86, 229, 0.4);
+}
+
+.auth-links {
+    text-align: center;
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--brand-border);
+}
+
+.auth-links a {
+    color: var(--brand-primary);
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.auth-links a:hover {
+    color: var(--brand-primary-strong);
+    text-decoration: underline;
+}
+
+.messages {
+    margin-bottom: 1.5rem;
+}
+
+.alert {
+    padding: 14px 16px;
+    border-radius: 12px;
+    margin-bottom: 1rem;
+    border: 1px solid transparent;
+}
+
+.alert-success {
+    background: #f0f9ff;
+    color: #0369a1;
+    border-color: #bae6fd;
+}
+
+.alert-error {
+    background: #fef2f2;
+    color: #dc2626;
+    border-color: #fecaca;
+}
+
+.form-errors {
+    color: #dc3545;
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+    padding: 8px 12px;
+    background: #fef2f2;
+    border-radius: 8px;
+    border: 1px solid #fecaca;
+}
+
+.help-text {
+    font-size: 0.75rem;
+    color: var(--brand-muted);
+    margin-top: 0.5rem;
+    line-height: 1.4;
+}
+
+/* Animações */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.auth-hero {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+.auth-card {
+    animation: fadeInUp 0.6s ease-out 0.2s both;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <!-- Hero Section igual à homepage -->
+    <div class="auth-hero">
+        <div class="auth-logo">
+            <img src="{% static 'branding/vexora-mark.svg' %}" alt="Vexora">
+        </div>
+        <h1 class="auth-title">Vexora</h1>
+        <p class="auth-subtitle">Crie sua conta gratuita</p>
+    </div>
+    
+    <div class="auth-card">
+        {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        
+        <form method="post">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <input type="text" name="username" class="form-input" placeholder="Nome de usuário" required autofocus>
+                {% if form.username.errors %}
+                <div class="form-errors">{{ form.username.errors }}</div>
+                {% endif %}
+                <div class="help-text">Obrigatório. 150 caracteres ou menos. Letras, números e @/./+/-/_ apenas.</div>
+            </div>
+            
+            <div class="form-group">
+                <input type="email" name="email" class="form-input" placeholder="Seu melhor email" required>
+                {% if form.email.errors %}
+                <div class="form-errors">{{ form.email.errors }}</div>
+                {% endif %}
+            </div>
+            
+            <div class="form-group">
+                <input type="password" name="password1" class="form-input" placeholder="Crie uma senha segura" required>
+                {% if form.password1.errors %}
+                <div class="form-errors">{{ form.password1.errors }}</div>
+                {% endif %}
+                <div class="help-text">
+                    • Mínimo de 8 caracteres<br>
+                    • Não use informações pessoais<br>
+                    • Combine letras, números e símbolos
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <input type="password" name="password2" class="form-input" placeholder="Confirme sua senha" required>
+                {% if form.password2.errors %}
+                <div class="form-errors">{{ form.password2.errors }}</div>
+                {% endif %}
+                <div class="help-text">Digite a mesma senha para verificação.</div>
+            </div>
+            
+            <button type="submit" class="btn-auth">Criar Minha Conta</button>
+        </form>
+        
+        <div class="auth-links">
+            <p>Já tem uma conta? <a href="{% url 'accounts:login' %}">Fazer login</a></p>
+        </div>
+    </div>
+</div>
+{% endblock %}

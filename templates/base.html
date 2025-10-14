@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8"/>
+  <title>{{ PLATFORM_NAME }} — {% block title %}{% endblock %}</title>
+  {% load static %}
+  <style>
+    :root {
+      --brand-primary: {{ THEME.primary }};
+      --brand-primary-strong: {{ THEME.primary_strong }};
+      --brand-primary-soft: {{ THEME.primary_soft }};
+      --brand-bg: {{ THEME.bg }};
+      --brand-surface: {{ THEME.surface }};
+      --brand-text: {{ THEME.text }};
+      --brand-muted: {{ THEME.muted }};
+      --brand-border: {{ THEME.border }};
+      --brand-accent: {{ THEME.accent }};
+    }
+
+    /* Estilos do Navbar */
+    .nav {
+        background: var(--brand-surface);
+        border-bottom: 1px solid var(--brand-border);
+        padding: 12px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        backdrop-filter: blur(10px);
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .brand {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        text-decoration: none;
+        color: var(--brand-text);
+        transition: all 0.3s ease;
+        flex-shrink: 0;
+    }
+
+
+    .brand:hover {
+        transform: translateY(-1px);
+    }
+
+    .brand-logo {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-primary-strong) 100%);
+        border-radius: 10px;
+        padding: 6px;
+        box-shadow: 0 4px 12px rgba(99, 86, 229, 0.3);
+        transition: all 0.3s ease;
+        flex-shrink: 0;
+    }
+
+    .brand:hover .brand-logo {
+        transform: scale(1.05);
+        box-shadow: 0 6px 20px rgba(99, 86, 229, 0.4);
+    }
+
+    .logo-img {
+        width: 24px;
+        height: 24px;
+        filter: brightness(0) invert(1);
+    }
+
+    .brand-text {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .brand-name {
+        font-size: 1.25rem;
+        font-weight: 800;
+        color: var(--brand-primary);
+        line-height: 1.2;
+    }
+
+    .brand-tagline {
+        font-size: 0.7rem;
+        color: var(--brand-muted);
+        font-weight: 500;
+        letter-spacing: 0.5px;
+        display: none;
+    }
+
+    .nav-actions {
+        display: flex;
+        gap: 0.75rem;
+        align-items: center;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        flex: 1;
+    }
+
+    .nav-btn {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: var(--brand-primary);
+        color: white;
+        padding: 8px 14px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 500;
+        font-size: 0.875rem;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        border: none;
+        cursor: pointer;
+        white-space: nowrap;
+    }
+
+    .nav-btn:hover {
+        background: var(--brand-primary-strong);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(99, 86, 229, 0.3);
+    }
+
+    .nav-btn.outline {
+        background: transparent;
+        color: var(--brand-primary);
+        border: 1px solid var(--brand-primary);
+    }
+
+    .nav-btn.outline:hover {
+        background: var(--brand-primary);
+        color: white;
+    }
+
+    .user-info {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: var(--brand-muted);
+        font-weight: 500;
+        font-size: 0.875rem;
+    }
+
+    .user-info span {
+        display: none; /* Esconder nome em mobile */
+    }
+
+     @media (min-width: 768px) {
+        .brand-logo {
+            width: 48px;
+            height: 48px;
+            padding: 8px;
+        }
+
+        .logo-img {
+            width: 32px;
+            height: 32px;
+        }
+
+        .brand-name {
+            font-size: 1.5rem;
+        }
+
+        .brand-tagline {
+            display: block; /* Mostrar tagline em desktop */
+        }
+
+        .user-info span {
+            display: inline; /* Mostrar nome em desktop */
+        }
+
+        .nav-btn {
+            padding: 8px 16px;
+            font-size: 1rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .nav {
+            padding: 10px 15px;
+        }
+        
+        .nav-actions {
+            gap: 0.5rem;
+        }
+        
+        .nav-btn {
+            padding: 6px 12px;
+            font-size: 0.8rem;
+        }
+        
+        .brand-name {
+            font-size: 1.1rem;
+        }
+    }
+    
+  </style>
+  <link rel="stylesheet" href="{% static 'branding.css' %}">
+  <link rel="icon" href="{% static 'branding/favicon.svg' %}" type="image/svg+xml">
+  {% block head %}{% endblock %}
+</head>
+<body>
+  <!-- Navbar consistente em todas as páginas -->
+  {% include "partials/navbar.html" %}
+  
+  <main style="padding:20px;max-width:1200px;margin:0 auto;">
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>

@@ -1,0 +1,266 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Editar {{ dashboard.name }} - Vexora{% endblock %}
+
+{% block head %}
+<style>
+.form-container {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.form-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.back-button {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: transparent;
+    color: var(--brand-muted);
+    border: 1px solid var(--brand-border);
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 0.875rem;
+    transition: all 0.3s ease;
+}
+
+.back-button:hover {
+    background: var(--brand-bg);
+    color: var(--brand-text);
+}
+
+.form-card {
+    background: var(--brand-surface);
+    padding: 2rem;
+    border-radius: 16px;
+    border: 1px solid var(--brand-border);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.form-title {
+    margin-bottom: 2rem;
+    color: var(--brand-text);
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: var(--brand-text);
+}
+
+.form-input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid var(--brand-border);
+    border-radius: 8px;
+    background: var(--brand-bg);
+    color: var(--brand-text);
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: var(--brand-primary);
+    box-shadow: 0 0 0 3px rgba(99, 86, 229, 0.1);
+}
+
+.form-textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+.form-help {
+    font-size: 0.875rem;
+    color: var(--brand-muted);
+    margin-top: 0.5rem;
+}
+
+.form-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: space-between;
+    margin-top: 2rem;
+    flex-wrap: wrap;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.btn-danger {
+    background: transparent;
+    color: #dc2626;
+    border: 1px solid #dc2626;
+}
+
+.btn-danger:hover {
+    background: #dc2626;
+    color: white;
+}
+
+.btn-secondary {
+    background: transparent;
+    color: var(--brand-muted);
+    border: 1px solid var(--brand-border);
+}
+
+.btn-secondary:hover {
+    background: var(--brand-bg);
+    color: var(--brand-text);
+}
+
+.dashboard-meta {
+    background: var(--brand-bg);
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    font-size: 0.875rem;
+    color: var(--brand-muted);
+}
+
+.meta-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+}
+
+.meta-item:last-child {
+    margin-bottom: 0;
+}
+
+.meta-label {
+    font-weight: 500;
+}
+
+.form-errors {
+    color: #dc3545;
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+    padding: 8px 12px;
+    background: #fef2f2;
+    border-radius: 6px;
+    border: 1px solid #fecaca;
+}
+
+.success-message {
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    background: #f0f9ff;
+    color: #0369a1;
+    border: 1px solid #bae6fd;
+}
+
+.error-message {
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    background: #fef2f2;
+    color: #dc2626;
+    border: 1px solid #fecaca;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <div class="form-header">
+        <a href="{% url 'dashboards:detail' dashboard.slug %}" class="back-button">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M19 12H5M12 19l-7-7 7-7"/>
+            </svg>
+            Voltar para o Dashboard
+        </a>
+    </div>
+
+    <div class="form-card">
+        <h1 class="form-title">Editar Dashboard</h1>
+        
+        {% if messages %}
+        <div>
+            {% for message in messages %}
+            <div class="{% if message.tags == 'error' %}error-message{% else %}success-message{% endif %}">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        
+        <div class="dashboard-meta">
+            <div class="meta-item">
+                <span class="meta-label">Criado em:</span>
+                <span>{{ dashboard.created|date:"d/m/Y H:i" }}</span>
+            </div>
+            <div class="meta-item">
+                <span class="meta-label">Última atualização:</span>
+                <span>{{ dashboard.updated|date:"d/m/Y H:i" }}</span>
+            </div>
+            <div class="meta-item">
+                <span class="meta-label">URL atual:</span>
+                <span>/dashboards/{{ dashboard.slug }}/</span>
+            </div>
+        </div>
+        
+        <form method="post">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label class="form-label" for="name">Nome do Dashboard *</label>
+                <input type="text" name="name" id="name" class="form-input" 
+                       placeholder="Ex: Analytics de Vendas" required
+                       value="{{ dashboard.name }}">
+                <div class="form-help">Dê um nome descritivo para seu dashboard</div>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label" for="slug">Slug (URL) *</label>
+                <input type="text" name="slug" id="slug" class="form-input" 
+                       placeholder="Ex: analytics-vendas" required
+                       value="{{ dashboard.slug }}">
+                <div class="form-help">Identificador único para a URL. Use apenas letras, números e hífens.</div>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label" for="description">Descrição</label>
+                <textarea name="description" id="description" class="form-input form-textarea" 
+                          placeholder="Descreva o propósito deste dashboard...">{{ dashboard.description }}</textarea>
+                <div class="form-help">Opcional. Explique o que este dashboard monitora.</div>
+            </div>
+            
+            <div class="form-actions">
+                <div class="action-buttons">
+                    <a href="{% url 'dashboards:delete' dashboard.slug %}" class="btn btn-danger">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.5rem;">
+                            <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                        </svg>
+                        Excluir
+                    </a>
+                </div>
+                
+                <div class="action-buttons">
+                    <a href="{% url 'dashboards:list' %}" class="btn btn-secondary">Cancelar</a>
+                    <button type="submit" class="btn">Salvar Alterações</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

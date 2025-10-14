@@ -1,0 +1,158 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Criar Dashboard - Vexora{% endblock %}
+
+{% block head %}
+<style>
+.form-container {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.form-card {
+    background: var(--brand-surface);
+    padding: 2rem;
+    border-radius: 16px;
+    border: 1px solid var(--brand-border);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.form-title {
+    margin-bottom: 2rem;
+    color: var(--brand-text);
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: var(--brand-text);
+}
+
+.form-input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid var(--brand-border);
+    border-radius: 8px;
+    background: var(--brand-bg);
+    color: var(--brand-text);
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: var(--brand-primary);
+    box-shadow: 0 0 0 3px rgba(99, 86, 229, 0.1);
+}
+
+.form-textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+.form-help {
+    font-size: 0.875rem;
+    color: var(--brand-muted);
+    margin-top: 0.5rem;
+}
+
+.form-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+    margin-top: 2rem;
+    flex-wrap: wrap;
+}
+
+.btn-secondary {
+    background: transparent;
+    color: var(--brand-muted);
+    border: 1px solid var(--brand-border);
+}
+
+.btn-secondary:hover {
+    background: var(--brand-bg);
+    color: var(--brand-text);
+}
+
+.form-errors {
+    color: #dc3545;
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+    padding: 8px 12px;
+    background: #fef2f2;
+    border-radius: 6px;
+    border: 1px solid #fecaca;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <div class="form-card">
+        <h1 class="form-title">Criar Novo Dashboard</h1>
+        
+        {% if messages %}
+        <div style="margin-bottom: 1.5rem;">
+            {% for message in messages %}
+            <div style="padding: 12px 16px; border-radius: 8px; margin-bottom: 1rem; 
+                        {% if message.tags == 'error' %}background: #fef2f2; color: #dc2626; border: 1px solid #fecaca;
+                        {% else %}background: #f0f9ff; color: #0369a1; border: 1px solid #bae6fd;{% endif %}">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        
+        <form method="post">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label class="form-label" for="id_name">Nome do Dashboard *</label>
+                <input type="text" name="name" id="id_name" class="form-input" 
+                       placeholder="Ex: Analytics de Vendas" required
+                       value="{{ form.name.value|default:'' }}">
+                {% if form.name.errors %}
+                <div class="form-errors">{{ form.name.errors }}</div>
+                {% endif %}
+                <div class="form-help">Dê um nome descritivo para seu dashboard</div>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label" for="id_slug">Slug (URL) *</label>
+                <input type="text" name="slug" id="id_slug" class="form-input" 
+                       placeholder="Ex: analytics-vendas" required
+                       value="{{ form.slug.value|default:'' }}">
+                {% if form.slug.errors %}
+                <div class="form-errors">{{ form.slug.errors }}</div>
+                {% endif %}
+                <div class="form-help">Identificador único para a URL. Use apenas letras, números e hífens.</div>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label" for="id_description">Descrição</label>
+                <textarea name="description" id="id_description" class="form-input form-textarea" 
+                          placeholder="Descreva o propósito deste dashboard...">{{ form.description.value|default:'' }}</textarea>
+                {% if form.description.errors %}
+                <div class="form-errors">{{ form.description.errors }}</div>
+                {% endif %}
+                <div class="form-help">Opcional. Explique o que este dashboard monitora.</div>
+            </div>
+            
+            <div class="form-actions">
+                <a href="{% url 'dashboards:list' %}" class="btn btn-secondary">Cancelar</a>
+                <button type="submit" class="btn">Criar Dashboard</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

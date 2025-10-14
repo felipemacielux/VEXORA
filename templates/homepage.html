@@ -1,0 +1,454 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Vexora - Sistema de Monitoramento e Analytics{% endblock %}
+
+{% block head %}
+<style>
+/* Hero section com logo central */
+.hero-brand {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.hero-logo {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-primary-strong) 100%);
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 8px 24px rgba(99, 86, 229, 0.4);
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+}
+
+.hero-logo img {
+    width: 48px;
+    height: 48px;
+    filter: brightness(0) invert(1);
+}
+
+.hero-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+    color: white !important;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.hero-subtitle {
+    font-size: 1.1rem;
+    margin-bottom: 1.5rem;
+    max-width: 100%;
+    color: white;
+    text-align: center; /* ← Garantir centralização */
+    margin-left: auto;  /* ← Centralizar horizontalmente */
+    margin-right: auto; /* ← Centralizar horizontalmente */
+    line-height: 1.5;   /* ← Melhorar espaçamento entre linhas */
+}
+
+/* Scroll Gradient */
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background: linear-gradient(to bottom, #ffffff 0%, {{ THEME.primary }} 100%);
+    background-attachment: fixed;
+    background-size: 100% 300vh;
+    min-height: 100vh;
+}
+
+/* Botões do Hero */
+.btn-hero {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.875rem 1.5rem;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 2px solid transparent;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.btn-hero.primary {
+    background: white;
+    color: var(--brand-primary);
+    border-color: white;
+}
+
+.btn-hero.primary:hover {
+    background: transparent;
+    color: white;
+    border-color: white;
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 15px 30px rgba(255, 255, 255, 0.3);
+}
+
+.btn-hero:not(.primary) {
+    background: transparent;
+    color: white;
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+.btn-hero:not(.primary):hover {
+    background: white;
+    color: var(--brand-primary);
+    border-color: white;
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 15px 30px rgba(255, 255, 255, 0.2);
+}
+
+.cta-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    animation: fadeInUp 0.8s ease-out 0.4s both;
+}
+
+/* Efeito de salto nos botões gerais */
+.btn {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    text-decoration: none;
+}
+
+.btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* Hero section */
+.hero-section {
+    background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-primary-strong) 100%);
+    color: white;
+    padding: 3rem 1rem;
+    text-align: center;
+    border-radius: 16px;
+    margin-bottom: 2rem;
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 30% 20%, rgba(255,255,255,0.1) 0%, transparent 50%);
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+}
+
+/* Ajustes nos cards */
+.card, .feature-card {
+    background: var(--brand-surface);
+    padding: 1.5rem;
+    border-radius: 12px;
+    border: 1px solid var(--brand-border);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card:hover, .feature-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    border-color: var(--brand-primary-soft);
+}
+
+/* Animações suaves */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.hero-title {
+    animation: fadeInUp 0.8s ease-out;
+}
+
+.hero-subtitle {
+    animation: fadeInUp 0.8s ease-out 0.2s both;
+}
+
+/* Features grid */
+.features-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    margin: 2rem 0;
+}
+
+.feature-card {
+    text-align: center;
+}
+
+.feature-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.welcome-section {
+    background: var(--brand-surface);
+    padding: 2rem;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+    border-left: 4px solid var(--brand-primary);
+}
+
+/* Media Queries para Homepage */
+@media (min-width: 640px) {
+    .hero-section {
+        padding: 4rem 2rem;
+        border-radius: 20px;
+        margin-bottom: 3rem;
+    }
+    
+    .hero-title {
+        font-size: 3rem;
+    }
+    
+    .features-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 2rem;
+    }
+    
+    .dashboard-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+    }
+}
+
+@media (min-width: 768px) {
+    .hero-section {
+        padding: 6rem 2rem;
+        border-radius: 24px;
+    }
+    
+    .hero-title {
+        font-size: 3.5rem;
+    }
+    
+    .hero-subtitle {
+        font-size: 1.25rem;
+        max-width: 600px;
+        padding:0;
+    }
+    
+    .features-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    
+    .dashboard-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    
+    .btn-hero {
+        padding: 1rem 2rem;
+        font-size: 1.1rem;
+    }
+}
+
+@media (min-width: 1024px) {
+    .dashboard-grid {
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    }
+}
+
+/* Ajustes para mobile muito pequeno */
+@media (max-width: 380px) {
+    .hero-section {
+        padding: 2rem 1rem;
+    }
+    
+    .hero-title {
+        font-size: 2rem;
+    }
+    
+    .hero-subtitle {
+        font-size: 1.2rem;
+        max-width: 90%;
+    }
+    
+    .cta-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .btn-hero {
+        width: 100%;
+        max-width: 250px;
+    }
+    
+    .feature-card {
+        padding: 1.25rem;
+    }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    function updateGradient() {
+        const scrollPosition = window.pageYOffset;
+        const windowHeight = window.innerHeight;
+        const documentHeight = document.documentElement.scrollHeight;
+        
+        const scrollPercent = scrollPosition / (documentHeight - windowHeight);
+        
+        const startColor = [255, 255, 255];
+        const endColor = [99, 86, 229];
+        
+        const currentColor = startColor.map((start, index) => {
+            return Math.round(start + (endColor[index] - start) * scrollPercent);
+        });
+        
+        const rgbColor = `rgb(${currentColor[0]}, ${currentColor[1]}, ${currentColor[2]})`;
+        const gradient = `linear-gradient(to bottom, #ffffff 0%, ${rgbColor} 100%)`;
+        
+        document.body.style.background = gradient;
+    }
+    
+    window.addEventListener('scroll', updateGradient);
+    updateGradient();
+});
+</script>
+{% endblock %}
+
+{% block content %}
+{% if user.is_authenticated %}
+    <!-- Homepage para usuários logados -->
+    <div class="welcome-section">
+        <h1>Bem-vindo de volta, {{ user.username }}! 👋</h1>
+        <p>Continue de onde parou ou explore novos dashboards.</p>
+    </div>
+
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+        <h2>Seus Dashboards</h2>
+        <a href="{% url 'dashboards:list' %}" class="btn">Ver Todos</a>
+    </div>
+
+    {% if user_dashboards %}
+    <div class="dashboard-grid">
+        {% for dashboard in user_dashboards %}
+        <div class="card">
+            <h3 style="margin: 0 0 0.5rem 0;">
+                <a href="{% url 'dashboards:detail' dashboard.slug %}" style="text-decoration: none; color: var(--brand-text);">
+                    {{ dashboard.name }}
+                </a>
+            </h3>
+            {% if dashboard.description %}
+            <p style="color: var(--brand-muted); margin: 0; font-size: 0.9rem;">{{ dashboard.description }}</p>
+            {% endif %}
+            <div style="margin-top: 1rem; display: flex; gap: 0.5rem;">
+                <a href="{% url 'dashboards:detail' dashboard.slug %}" class="btn" style="padding: 0.5rem 1rem; font-size: 0.8rem;">Abrir</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="card" style="text-align: center; padding: 3rem;">
+        <h3 style="margin: 0 0 1rem 0;">Nenhum dashboard encontrado</h3>
+        <p style="color: var(--brand-muted); margin: 0 0 2rem 0;">Comece criando seu primeiro dashboard para visualizar dados.</p>
+        <a href="/admin/dashboards/dashboard/add/" class="btn">Criar Primeiro Dashboard</a>
+    </div>
+    {% endif %}
+
+{% else %}
+    <!-- Homepage para visitantes (não logados) -->
+    <div class="hero-section">
+        <div class="hero-content">
+            <div class="hero-brand">
+                <div class="hero-logo">
+                    <img src="{% static 'branding/vexora-mark.svg' %}" alt="Vexora">
+                </div>
+                <div class="hero-title">Vexora</div>
+            </div>
+            
+            <div class="hero-subtitle">
+                Sistema de monitoramento e analytics em tempo real. 
+                Crie dashboards poderosos e visualize seus dados de forma intuitiva.
+            </div>
+            
+            <div class="cta-buttons">
+                <a href="{% url 'accounts:register' %}" class="btn-hero primary">Começar Agora</a>
+                <a href="#features" class="btn-hero">Saiba Mais</a>
+            </div>
+        </div>
+    </div>
+
+    <div id="features" class="features-grid">
+        <div class="feature-card">
+            <div class="feature-icon">📊</div>
+            <h3>Visualizações Poderosas</h3>
+            <p>Gráficos, tabelas e métricas em tempo real para entender seus dados.</p>
+        </div>
+        
+        <div class="feature-card">
+            <div class="feature-icon">🔌</div>
+            <h3>Múltiplas Fontes</h3>
+            <p>Conecte-se a PostgreSQL, MySQL, APIs e muito mais.</p>
+        </div>
+        
+        <div class="feature-card">
+            <div class="feature-icon">👥</div>
+            <h3>Colaboração</h3>
+            <p>Compartilhe dashboards com sua equipe e trabalhem juntos.</p>
+        </div>
+        
+        <div class="feature-card">
+            <div class="feature-icon">⚡</div>
+            <h3>Tempo Real</h3>
+            <p>Atualizações automáticas e alertas instantâneos.</p>
+        </div>
+        
+        <div class="feature-card">
+            <div class="feature-icon">🎨</div>
+            <h3>Customizável</h3>
+            <p>Arraste e solte painéis, temas customizados e muito mais.</p>
+        </div>
+        
+        <div class="feature-card">
+            <div class="feature-icon">🔒</div>
+            <h3>Seguro</h3>
+            <p>Autenticação robusta e controle de acesso granular.</p>
+        </div>
+    </div>
+
+    <div style="text-align: center; margin-top: 4rem; padding: 3rem; background: var(--brand-surface); border-radius: 12px;">
+        <h2>Pronto para começar?</h2>
+        <p style="color: var(--brand-muted); margin-bottom: 2rem;">Junte-se a milhares de times que usam Vexora para tomar decisões baseadas em dados.</p>
+        <a href="{% url 'accounts:register' %}" class="btn" style="padding: 1rem 2rem; font-size: 1.1rem;">Criar Minha Conta</a>
+    </div>
+{% endif %}
+{% endblock %}

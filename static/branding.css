@@ -1,0 +1,52 @@
+:root{
+  --brand-primary: #6356e5;
+  --brand-primary-strong: #3a2ade;
+  --brand-primary-soft: #8c82ec;
+  --brand-bg: #f3f6f6;
+  --brand-surface: #ffffff;
+  --brand-text: #0f172a;
+  --brand-muted: #475569;
+  --brand-border: #e2e8f0;
+  --brand-accent: #8c82ec;
+}
+
+*{box-sizing:border-box}
+body{margin:0;background:var(--brand-bg);color:var(--brand-text);font-family:ui-sans-serif,system-ui,Segoe UI,Roboto}
+a{color:var(--brand-primary)}
+.nav{background:var(--brand-surface);border-bottom:1px solid var(--brand-border);padding:12px 20px;display:flex;gap:16px;align-items:center}
+.nav .brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--brand-text);font-weight:700}
+.btn{background:var(--brand-primary);color:#fff;border:none;padding:8px 12px;border-radius:10px;cursor:pointer}
+.btn:hover{background:var(--brand-primary-strong)}
+.card{background:var(--brand-surface);border:1px solid var(--brand-border);border-radius:14px;padding:16px}
+.hero{
+  background: radial-gradient(1000px 500px at 30% -10%, var(--brand-primary-soft), var(--brand-primary) 45%, var(--brand-primary-strong) 100%);
+  border-radius:16px;padding:28px;color:#fff;
+}
+
+/* Efeitos de hover melhorados */
+.btn, .btn-hero, .nav-btn {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn:hover, .btn-hero:hover, .nav-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+/* Navegação sticky */
+.nav {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    backdrop-filter: blur(10px);
+}
+
+/* Animações suaves para cards */
+.card, .feature-card {
+    transition: all 0.3s ease;
+}
+
+.card:hover, .feature-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+}

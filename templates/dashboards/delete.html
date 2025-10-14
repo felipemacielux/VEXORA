@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Excluir Dashboard - Vexora{% endblock %}
+
+{% block head %}
+<style>
+.confirmation-container {
+    max-width: 500px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+.confirmation-card {
+    background: var(--brand-surface);
+    padding: 2.5rem;
+    border-radius: 16px;
+    border: 1px solid var(--brand-border);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.confirmation-icon {
+    font-size: 3rem;
+    margin-bottom: 1.5rem;
+    color: #dc2626;
+}
+
+.confirmation-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: var(--brand-text);
+}
+
+.confirmation-message {
+    color: var(--brand-muted);
+    margin-bottom: 2rem;
+    line-height: 1.5;
+}
+
+.dashboard-info {
+    background: var(--brand-bg);
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+    border-left: 4px solid #dc2626;
+}
+
+.dashboard-name {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0 0 0.5rem 0;
+    color: var(--brand-text);
+}
+
+.dashboard-description {
+    color: var(--brand-muted);
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+.confirmation-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.btn-danger {
+    background: #dc2626;
+    color: white;
+    border: none;
+}
+
+.btn-danger:hover {
+    background: #b91c1c;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(220, 38, 38, 0.3);
+}
+
+.btn-secondary {
+    background: transparent;
+    color: var(--brand-muted);
+    border: 1px solid var(--brand-border);
+}
+
+.btn-secondary:hover {
+    background: var(--brand-bg);
+    color: var(--brand-text);
+}
+
+.warning-text {
+    color: #dc2626;
+    font-size: 0.875rem;
+    margin-top: 1rem;
+    font-weight: 500;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="confirmation-container">
+    <div class="confirmation-card">
+        <div class="confirmation-icon">⚠️</div>
+        
+        <h1 class="confirmation-title">Excluir Dashboard</h1>
+        
+        <p class="confirmation-message">
+            Você está prestes a excluir permanentemente este dashboard. 
+            Esta ação não pode ser desfeita.
+        </p>
+        
+        <div class="dashboard-info">
+            <h3 class="dashboard-name">{{ dashboard.name }}</h3>
+            {% if dashboard.description %}
+            <p class="dashboard-description">{{ dashboard.description }}</p>
+            {% else %}
+            <p class="dashboard-description">Sem descrição</p>
+            {% endif %}
+        </div>
+        
+        <form method="post">
+            {% csrf_token %}
+            <div class="confirmation-actions">
+                <a href="{% url 'dashboards:list' %}" class="btn btn-secondary">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.5rem;">
+                        <path d="M19 12H5M12 19l-7-7 7-7"/>
+                    </svg>
+                    Cancelar
+                </a>
+                <button type="submit" class="btn btn-danger">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.5rem;">
+                        <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M10 11v6M14 11v6"/>
+                    </svg>
+                    Excluir Permanentemente
+                </button>
+            </div>
+        </form>
+        
+        <p class="warning-text">
+            ⚠️ Todos os painéis e dados associados serão perdidos.
+        </p>
+    </div>
+</div>
+{% endblock %}
